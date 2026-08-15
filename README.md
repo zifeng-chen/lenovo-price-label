@@ -42,14 +42,14 @@ npm start
 
 ## 打印设置
 
-打印实现采用固定 `70mm × 28mm` 标签、每页 3 列 × 9 行，共 27 个。为了保持标签宽度严格为 70mm，横向不设置实体间距，以 `0.5pt` 裁切边框分隔；纵向间距为 3mm，上下各留 10.5mm，使整个标签网格在 A4 高度内居中。
+打印实现采用固定 `68mm × 28mm` 标签、每页 3 列 × 9 行，共 27 个。三列标签总宽度为 204mm，A4 页面左右各留 3mm；纵向间距为 3mm，上下各留 10.5mm，因此标签不会贴到纸张的任何边缘。标签之间使用统一的 `0.5pt` 裁切边框分隔。
 
 浏览器打印对话框请设置：
 
 - 纸张：A4
 - 方向：纵向
 - 缩放：100%
-- 边距：无
+- 边距：无（页面留白已由打印 CSS 精确控制）
 - 页眉和页脚：关闭
 
 不同打印机可能存在不可打印边缘，正式批量打印前请先打印一张并用尺校准。
@@ -62,6 +62,6 @@ npm start
 - `PUT /api/products/:id`
 - `DELETE /api/products/:id`
 
-## Logo 来源
+## Logo
 
-标签使用本地 SVG 矢量标识，参考 [Lenovo 官方媒体 Logo 页面](https://news.lenovo.com/press-kits/fy2022-23-lenovo-earnings/lenovo-logo/)及其来源为 Lenovo 官方网站的 [Wikimedia Commons 矢量文件记录](https://commons.wikimedia.org/wiki/File:Lenovo_(2015).svg)。Lenovo 名称和标识是 Lenovo 的商标，本项目中的使用不表示 Lenovo 对本项目的认可。
+标签使用 `public/lenovo-logo.svg` 中的本地 SVG 矢量标识，并在打印标签左侧显示。Lenovo 名称和标识是 Lenovo 的商标，本项目中的使用不表示 Lenovo 对本项目的认可。

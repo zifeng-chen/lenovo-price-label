@@ -646,8 +646,8 @@ input[type='checkbox'] {
     width: 210mm;
     height: 297mm;
     margin: 0;
-    padding: 10.5mm 0;
-    grid-template-columns: repeat(3, 70mm);
+    padding: 10.5mm 3mm;
+    grid-template-columns: repeat(3, 68mm);
     grid-template-rows: repeat(9, 28mm);
     column-gap: 0;
     row-gap: 3mm;
@@ -657,7 +657,7 @@ input[type='checkbox'] {
 
   .price-label {
     position: relative;
-    width: 70mm;
+    width: 68mm;
     height: 28mm;
     overflow: hidden;
     break-inside: avoid;
@@ -672,11 +672,10 @@ input[type='checkbox'] {
   .label-logo {
     position: absolute;
     top: 18px;
-    left: 50%;
+    left: 3mm;
     display: block;
-    width: 28mm;
+    width: 36mm;
     height: auto;
-    transform: translateX(-50%);
   }
 
   .label-details {
