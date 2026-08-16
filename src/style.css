@@ -616,12 +616,12 @@ input[type='checkbox'] {
   #app,
   .app-shell {
     width: 210mm;
-    height: 297mm;
+    height: 296mm;
     min-width: 210mm;
-    min-height: 297mm;
+    min-height: 0;
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden;
+    overflow: hidden !important;
     background: #fff !important;
   }
 
@@ -633,26 +633,38 @@ input[type='checkbox'] {
 
   .print-root {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
     display: block !important;
     width: 210mm;
-    height: 297mm;
+    height: 296mm;
+    max-height: 296mm;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    break-before: avoid-page;
+    break-after: avoid-page;
+    break-inside: avoid-page;
+    page-break-before: avoid;
+    page-break-after: avoid;
+    page-break-inside: avoid;
   }
 
   .print-sheet {
     display: grid;
     width: 210mm;
-    height: 297mm;
+    height: 296mm;
+    max-height: 296mm;
     margin: 0;
-    padding: 10.5mm 3mm;
+    padding: 10mm 3mm;
     grid-template-columns: repeat(3, 68mm);
     grid-template-rows: repeat(9, 28mm);
     column-gap: 0;
     row-gap: 3mm;
     overflow: hidden;
     box-sizing: border-box;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
   }
 
   .price-label {
@@ -663,8 +675,9 @@ input[type='checkbox'] {
     break-inside: avoid;
     box-sizing: border-box;
     background: #fff;
-    border: 0.5pt solid #000;
+    border: 0.5pt solid #000 !important;
     color: #000;
+    page-break-inside: avoid;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
