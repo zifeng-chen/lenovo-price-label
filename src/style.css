@@ -652,7 +652,7 @@ input[type='checkbox'] {
 
   .print-sheet {
     position: absolute;
-    top: calc(10mm + 5px);
+    top: 0;
     left: 4mm;
     display: grid;
     width: 202mm;
@@ -660,6 +660,8 @@ input[type='checkbox'] {
     max-height: 276mm;
     margin: 0;
     padding: 0;
+    transform: translateY(15mm);
+    transform-origin: top left;
     grid-template-columns: repeat(3, 66mm);
     grid-template-rows: repeat(9, 28mm);
     column-gap: 2mm;
