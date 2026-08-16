@@ -82,16 +82,11 @@ input[type='checkbox'] {
 }
 
 .brand-mark {
-  display: grid;
-  flex: 0 0 64px;
-  width: 64px;
-  height: 64px;
-  place-items: center;
-  color: #fff;
-  background: var(--lenovo-red);
-  font-size: 38px;
-  font-weight: 900;
-  line-height: 1;
+  display: block;
+  flex: 0 0 clamp(120px, 18vw, 210px) !important;
+  width: clamp(120px, 18vw, 210px) !important;
+  height: auto !important;
+  object-fit: contain;
 }
 
 .system-version,

@@ -166,7 +166,7 @@ onMounted(loadData)
     <div class="management-ui">
       <header class="app-header">
         <div class="header-inner">
-          <div class="brand-mark" aria-hidden="true">L</div>
+          <img class="brand-mark" src="/lenovo-logo.svg" alt="Lenovo 联想" />
           <div>
             <p class="system-version">PRICE LABEL SYSTEM · V2.0</p>
             <h1>联想价格标签打印系统</h1>
