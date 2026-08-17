@@ -16,9 +16,15 @@ const DEFAULT_CATEGORIES = [
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url))
 const dataDirectory = path.resolve(serverDirectory, '../data')
+const databasePath = path.join(dataDirectory, 'database.db')
+const initialDatabasePath = path.join(dataDirectory, 'initial-database.db')
 fs.mkdirSync(dataDirectory, { recursive: true })
 
-const database = new Database(path.join(dataDirectory, 'database.db'))
+if (!fs.existsSync(databasePath) && fs.existsSync(initialDatabasePath)) {
+  fs.copyFileSync(initialDatabasePath, databasePath)
+}
+
+const database = new Database(databasePath)
 database.pragma('journal_mode = WAL')
 database.pragma('foreign_keys = ON')
 

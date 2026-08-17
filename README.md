@@ -59,7 +59,7 @@
 lenovo-price-label/
 ├── server/
 │   ├── index.js                 # Express 入口、局域网监听和静态文件
-│   ├── database.js              # SQLite 初始化、建表和默认品类
+│   ├── database.js              # SQLite 初始快照复制、建表和连接
 │   └── routes/
 │       ├── categories.js        # 品类查询与新增 API
 │       ├── data.js              # JSON 数据导出、校验与导入 API
@@ -78,7 +78,8 @@ lenovo-price-label/
 ├── public/
 │   └── lenovo-logo.svg          # 网页与标签共用 SVG
 ├── data/
-│   └── database.db              # 首次运行后自动生成，不提交 Git
+│   ├── initial-database.db      # 提交到 Git 的初始数据快照（8 品类、36 商品）
+│   └── database.db              # 首次运行时从快照复制，运行数据不提交 Git
 ├── dist/                        # npm run build 生成，不提交 Git
 ├── index.html
 ├── package.json
@@ -86,7 +87,7 @@ lenovo-price-label/
 └── vite.config.js
 ```
 
-`node_modules/`、`dist/`、SQLite 数据库和 WAL 文件均已加入 `.gitignore`。
+`node_modules/`、`dist/`、运行数据库 `data/database.db`、本地备份和 WAL 文件均已加入 `.gitignore`。只有只读基线快照 `data/initial-database.db` 提交到 Git。
 
 ## 环境要求
 
@@ -300,12 +301,13 @@ curl http://localhost:8890/api/categories
 数据库文件：
 
 ```text
-data/database.db
+data/initial-database.db  # Git 中的初始快照
+data/database.db          # 本机实际运行数据
 ```
 
-首次启动自动创建目录、数据库和表。SQLite 启用 WAL 日志、外键约束及商品查询索引。
+首次启动且 `data/database.db` 不存在时，服务会把 `data/initial-database.db` 复制为运行数据库，再启用 WAL、外键约束并检查/创建表和索引。当前初始快照包含 8 个品类和 36 个商品。
 
-默认品类：背包、键鼠、耳机、充电器、支架、电脑配件、音响、打印机。默认品类使用 `INSERT OR IGNORE` 初始化，不会覆盖已有数据。
+已有 `data/database.db` 时绝不会被初始快照覆盖。若初始快照不存在，系统仍会创建空运行库并写入默认品类：背包、键鼠、耳机、充电器、支架、电脑配件、音响、打印机。
 
 ### 数据表
 
@@ -343,7 +345,7 @@ data/database.db
 
 ### SQLite 文件备份
 
-SQLite 数据库、`-wal` 和 `-shm` 文件不会提交到 GitHub。代码推送不能替代数据备份。
+运行数据库 `data/database.db`、本地备份、`-wal` 和 `-shm` 文件不会提交到 GitHub。`data/initial-database.db` 只是首次部署基线，不会随日常商品修改自动更新，不能替代运行数据备份。
 
 安全备份前先停止服务：
 
@@ -361,6 +363,18 @@ npm start
 ```
 
 恢复会替换当前商品和品类数据。
+
+### 恢复仓库初始数据
+
+先停止服务并备份运行库，然后删除本机运行文件；下次启动会重新复制 `initial-database.db`：
+
+```bash
+cp data/database.db ~/lenovo-price-label-backups/database-before-reset.db
+rm -f data/database.db data/database.db-wal data/database.db-shm
+npm start
+```
+
+该操作会把运行数据恢复为仓库中的 8 个品类和 36 个商品。
 
 ### 添加品类
 
@@ -562,4 +576,4 @@ curl http://localhost:8890/
 - [ ] 实体标签测量为 70mm × 28mm
 - [ ] 横向间距 2mm、纵向间距 3mm
 - [ ] Logo 与价格同处顶部，商品名称独占底行
-- [ ] Git 未提交数据库和构建产物
+- [ ] Git 仅提交 `data/initial-database.db`，未提交运行库、备份、WAL 和构建产物

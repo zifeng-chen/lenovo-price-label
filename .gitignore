@@ -3,5 +3,6 @@ dist/
 .DS_Store
 npm-debug.log*
 data/*.db
+!data/initial-database.db
 data/*.db-shm
 data/*.db-wal
