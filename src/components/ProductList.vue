@@ -10,10 +10,6 @@ const props = defineProps({
     type: Set,
     required: true,
   },
-  maxSelection: {
-    type: Number,
-    default: 24,
-  },
 })
 
 const emit = defineEmits(['toggle', 'toggle-all', 'edit', 'delete'])
@@ -78,7 +74,6 @@ function formatPrice(price) {
               <input
                 type="checkbox"
                 :checked="selectedIds.has(product.id)"
-                :disabled="selectedIds.size >= maxSelection && !selectedIds.has(product.id)"
                 :aria-label="`将 ${product.name} 加入打印队列`"
                 @change="emit('toggle', product.id, $event.target.checked)"
               />

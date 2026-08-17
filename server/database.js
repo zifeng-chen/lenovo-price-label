@@ -51,6 +51,7 @@ const seedCategories = database.transaction((categories) => {
   categories.forEach((name, index) => insert.run(name, index + 1))
 })
 
-seedCategories(DEFAULT_CATEGORIES)
+const categoryCount = database.prepare('SELECT COUNT(*) AS count FROM categories').get().count
+if (categoryCount === 0) seedCategories(DEFAULT_CATEGORIES)
 
 export default database

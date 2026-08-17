@@ -124,6 +124,37 @@ input[type='checkbox'] {
   box-shadow: 0 10px 32px rgb(25 25 25 / 5%);
 }
 
+.data-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+  padding: 20px 28px;
+}
+
+.data-tools h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.data-tools p:last-child {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.data-tool-buttons {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.data-tool-buttons .secondary-button {
+  min-width: 112px;
+}
+
 .product-form-card {
   padding: 28px;
 }
@@ -168,10 +199,56 @@ input[type='checkbox'] {
   gap: 8px;
 }
 
-.field > span {
+.field > span,
+.field-label-row > label {
   color: #4e4e4e;
   font-size: 13px;
   font-weight: 700;
+}
+
+.field-label-row {
+  display: flex;
+  min-height: 18px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.add-category-button {
+  color: var(--lenovo-red);
+  font-size: 12px;
+}
+
+.category-creator {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px;
+  background: #f7f6f4;
+  border: 1px solid var(--line);
+}
+
+.category-creator input {
+  flex: 1 1 220px;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  padding: 0 13px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #cfceca;
+  border-radius: 0;
+}
+
+.category-creator input:hover {
+  border-color: #999792;
+}
+
+.category-creator input:focus {
+  outline: none;
+  border-color: var(--lenovo-red);
+  box-shadow: 0 0 0 3px rgb(226 35 26 / 10%);
 }
 
 .field input,
@@ -517,6 +594,31 @@ input[type='checkbox'] {
   display: none;
 }
 
+.print-name-measurer {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.print-name-measure-width {
+  width: 70mm;
+  padding: 0 2.5mm;
+  overflow: visible;
+  box-sizing: border-box;
+  border-right: 0.5pt solid transparent;
+  border-left: 0.5pt solid transparent;
+}
+
+.label-name-measure {
+  display: inline-block;
+  font-size: 5mm;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 @media (max-width: 900px) {
   .product-form {
     grid-template-columns: 1fr 1fr;
@@ -562,6 +664,17 @@ input[type='checkbox'] {
   .page-content {
     padding-top: 20px;
     padding-bottom: 180px;
+  }
+
+  .data-tools {
+    align-items: stretch;
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  .data-tool-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .product-form-card {
@@ -611,43 +724,51 @@ input[type='checkbox'] {
   #app,
   .app-shell {
     width: 297mm;
-    height: 209mm;
+    height: auto;
     min-width: 297mm;
     min-height: 0;
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     background: #fff !important;
   }
 
   .management-ui,
   .print-actions,
+  .print-name-measurer,
   .toast {
     display: none !important;
   }
 
   .print-root {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: static;
     display: block !important;
     width: 297mm;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .print-page {
+    position: relative;
+    width: 297mm;
     height: 209mm;
-    max-height: 209mm;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    break-before: avoid-page;
-    break-after: avoid-page;
     break-inside: avoid-page;
-    page-break-before: avoid;
-    page-break-after: avoid;
     page-break-inside: avoid;
+  }
+
+  .print-page + .print-page {
+    break-before: page;
+    page-break-before: always;
   }
 
   .print-sheet {
     position: absolute;
-    top: 0;
+    top: 13.5mm;
     left: 5.5mm;
     display: grid;
     width: 286mm;
@@ -655,8 +776,6 @@ input[type='checkbox'] {
     max-height: 183mm;
     margin: 0;
     padding: 0;
-    transform: translateY(13.5mm);
-    transform-origin: top left;
     grid-template-columns: repeat(4, 70mm);
     grid-template-rows: repeat(6, 28mm);
     column-gap: 2mm;
@@ -708,7 +827,7 @@ input[type='checkbox'] {
     font-size: 8mm;
     font-weight: 900;
     line-height: 1;
-    letter-spacing: -0.04em;
+    letter-spacing: 2px;
     text-align: right;
     white-space: nowrap;
   }
@@ -716,25 +835,14 @@ input[type='checkbox'] {
   .label-name {
     position: absolute;
     right: 2.5mm;
-    bottom: 2mm;
+    bottom: 3mm;
     left: 2.5mm;
     display: block;
     overflow: hidden;
+    font-size: 5mm;
     font-weight: 800;
     line-height: 1;
     text-overflow: clip;
     white-space: nowrap;
-  }
-
-  .name-short {
-    font-size: 5mm;
-  }
-
-  .name-medium {
-    font-size: 4mm;
-  }
-
-  .name-long {
-    font-size: 3mm;
   }
 }

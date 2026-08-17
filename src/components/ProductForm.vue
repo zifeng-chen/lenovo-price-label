@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, watch } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 
 const props = defineProps({
   categories: {
@@ -14,9 +14,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  categoryBusy: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['submit', 'cancel-edit'])
+const emit = defineEmits(['submit', 'cancel-edit', 'create-category'])
 const LAST_CATEGORY_KEY = 'lenovo-price-label:last-category'
 
 const form = reactive({
@@ -24,13 +28,21 @@ const form = reactive({
   category: '',
   price: '',
 })
+const showCategoryCreator = ref(false)
+const newCategoryName = ref('')
+const categoryInputRef = ref(null)
 
 const isEditing = computed(() => Boolean(props.editingProduct))
 
 watch(
   () => props.categories,
   (categories) => {
-    if (!categories.length || form.category) return
+    if (!categories.length) {
+      form.category = ''
+      return
+    }
+    if (categories.some(({ name }) => name === form.category)) return
+
     const savedCategory = localStorage.getItem(LAST_CATEGORY_KEY)
     form.category = categories.some(({ name }) => name === savedCategory)
       ? savedCategory
@@ -50,6 +62,7 @@ watch(
 )
 
 function submitForm() {
+  if (props.busy || props.categoryBusy) return
   emit('submit', {
     name: form.name.trim(),
     category: form.category,
@@ -75,7 +88,42 @@ function cancelEdit() {
   emit('cancel-edit')
 }
 
-defineExpose({ clearFields })
+async function openCategoryCreator() {
+  if (props.busy || props.categoryBusy) return
+  showCategoryCreator.value = true
+  await nextTick()
+  categoryInputRef.value?.focus()
+}
+
+function closeCategoryCreator() {
+  showCategoryCreator.value = false
+  newCategoryName.value = ''
+}
+
+function submitNewCategory() {
+  const name = newCategoryName.value.trim()
+  if (!name || props.busy || props.categoryBusy) return
+  emit('create-category', name)
+}
+
+function selectCategory(name) {
+  form.category = name
+  localStorage.setItem(LAST_CATEGORY_KEY, name)
+  closeCategoryCreator()
+}
+
+function resetAfterImport() {
+  form.name = ''
+  form.price = ''
+  const savedCategory = localStorage.getItem(LAST_CATEGORY_KEY)
+  form.category = props.categories.some(({ name }) => name === savedCategory)
+    ? savedCategory
+    : (props.categories[0]?.name ?? '')
+  if (form.category) localStorage.setItem(LAST_CATEGORY_KEY, form.category)
+  closeCategoryCreator()
+}
+
+defineExpose({ clearFields, selectCategory, resetAfterImport })
 </script>
 
 <template>
@@ -103,15 +151,26 @@ defineExpose({ clearFields })
         />
       </label>
 
-      <label class="field">
-        <span>品类</span>
-        <select v-model="form.category" required>
+      <div class="field">
+        <div class="field-label-row">
+          <label for="product-category">品类</label>
+          <button
+            v-if="!showCategoryCreator"
+            type="button"
+            class="text-button add-category-button"
+            :disabled="busy || categoryBusy"
+            @click="openCategoryCreator"
+          >
+            + 新增品类
+          </button>
+        </div>
+        <select id="product-category" v-model="form.category" required>
           <option value="" disabled>请选择品类</option>
           <option v-for="category in categories" :key="category.id" :value="category.name">
             {{ category.name }}
           </option>
         </select>
-      </label>
+      </div>
 
       <label class="field">
         <span>价格（元）</span>
@@ -126,9 +185,36 @@ defineExpose({ clearFields })
         />
       </label>
 
-      <button class="primary-button submit-button" type="submit" :disabled="busy || !categories.length">
+      <button class="primary-button submit-button" type="submit" :disabled="busy || categoryBusy || !categories.length">
         {{ busy ? '保存中…' : (isEditing ? '保存修改' : '添加商品') }}
       </button>
+
+      <div v-if="showCategoryCreator" class="category-creator">
+        <label class="visually-hidden" for="new-category-name">新品类名称</label>
+        <input
+          id="new-category-name"
+          ref="categoryInputRef"
+          v-model="newCategoryName"
+          type="text"
+          maxlength="30"
+          placeholder="输入新品类名称"
+          autocomplete="off"
+          :disabled="busy || categoryBusy"
+          @keydown.enter.prevent="submitNewCategory"
+          @keydown.esc.prevent="closeCategoryCreator"
+        />
+        <button
+          type="button"
+          class="primary-button"
+          :disabled="busy || categoryBusy || !newCategoryName.trim()"
+          @click="submitNewCategory"
+        >
+          {{ categoryBusy ? '保存中…' : '保存品类' }}
+        </button>
+        <button type="button" class="secondary-button" :disabled="busy || categoryBusy" @click="closeCategoryCreator">
+          取消
+        </button>
+      </div>
     </form>
   </section>
 </template>

@@ -3,7 +3,8 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
-import database from './database.js'
+import categoriesRouter from './routes/categories.js'
+import dataRouter from './routes/data.js'
 import productsRouter from './routes/products.js'
 
 const HOST = '0.0.0.0'
@@ -13,18 +14,9 @@ const serverDirectory = path.dirname(fileURLToPath(import.meta.url))
 const distDirectory = path.resolve(serverDirectory, '../dist')
 
 app.disable('x-powered-by')
+app.use('/api/data', dataRouter)
 app.use(express.json({ limit: '50kb' }))
-
-app.get('/api/categories', (_request, response) => {
-  const categories = database.prepare(`
-    SELECT id, name
-    FROM categories
-    ORDER BY sort_order ASC, id ASC
-  `).all()
-
-  response.json(categories)
-})
-
+app.use('/api/categories', categoriesRouter)
 app.use('/api/products', productsRouter)
 
 if (fs.existsSync(distDirectory)) {
@@ -35,8 +27,15 @@ if (fs.existsSync(distDirectory)) {
 }
 
 app.use((error, _request, response, _next) => {
+  if (error.type === 'entity.too.large') {
+    return response.status(413).json({ message: '导入文件过大，最大支持 5MB' })
+  }
+  if (error.type === 'entity.parse.failed') {
+    return response.status(400).json({ message: 'JSON 格式无效' })
+  }
+
   console.error(error)
-  response.status(500).json({ message: '服务器处理请求时发生错误' })
+  return response.status(500).json({ message: '服务器处理请求时发生错误' })
 })
 
 function getLanAddresses() {
