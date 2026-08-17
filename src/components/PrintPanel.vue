@@ -9,7 +9,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['clear'])
-const ITEMS_PER_PAGE = 24
+const ITEMS_PER_PAGE = 28
 const DEFAULT_NAME_SIZE_MM = 5
 const MIN_NAME_SIZE_MM = 0.5
 const nameFontSizes = ref({})
