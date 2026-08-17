@@ -5,7 +5,7 @@ import PrintPanel from '../components/PrintPanel.vue'
 import ProductForm from '../components/ProductForm.vue'
 import ProductList from '../components/ProductList.vue'
 
-const MAX_PRINT_ITEMS = 27
+const MAX_PRINT_ITEMS = 24
 const products = ref([])
 const categories = ref([])
 const activeCategory = ref('全部')
@@ -125,7 +125,7 @@ function toggleProduct(id, checked) {
   const nextSelected = new Set(selectedIds.value)
   if (checked) {
     if (nextSelected.size >= MAX_PRINT_ITEMS) {
-      notify('一张 A4 最多打印 27 个标签', 'error')
+      notify('一张 A4 最多打印 24 个标签', 'error')
       return
     }
     nextSelected.add(id)
@@ -150,7 +150,7 @@ function toggleAllFiltered(checked) {
   selectedIds.value = nextSelected
 
   if (unselected.length > availableSlots) {
-    notify('已选择当前结果中的前 27 个商品', 'error')
+    notify('已选择当前结果中的前 24 个商品', 'error')
   }
 }
 

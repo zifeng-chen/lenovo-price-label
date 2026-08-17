@@ -12,7 +12,7 @@ const props = defineProps({
   },
   maxSelection: {
     type: Number,
-    default: 27,
+    default: 24,
   },
 })
 

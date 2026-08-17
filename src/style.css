@@ -601,7 +601,7 @@ input[type='checkbox'] {
 }
 
 @page {
-  size: A4 portrait;
+  size: A4 landscape;
   margin: 0;
 }
 
@@ -610,9 +610,9 @@ input[type='checkbox'] {
   body,
   #app,
   .app-shell {
-    width: 210mm;
-    height: 296mm;
-    min-width: 210mm;
+    width: 297mm;
+    height: 209mm;
+    min-width: 297mm;
     min-height: 0;
     margin: 0 !important;
     padding: 0 !important;
@@ -631,9 +631,9 @@ input[type='checkbox'] {
     top: 0;
     left: 0;
     display: block !important;
-    width: 210mm;
-    height: 296mm;
-    max-height: 296mm;
+    width: 297mm;
+    height: 209mm;
+    max-height: 209mm;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -648,17 +648,17 @@ input[type='checkbox'] {
   .print-sheet {
     position: absolute;
     top: 0;
-    left: 4mm;
+    left: 5.5mm;
     display: grid;
-    width: 202mm;
-    height: 276mm;
-    max-height: 276mm;
+    width: 286mm;
+    height: 183mm;
+    max-height: 183mm;
     margin: 0;
     padding: 0;
-    transform: translateY(15mm);
+    transform: translateY(13.5mm);
     transform-origin: top left;
-    grid-template-columns: repeat(3, 66mm);
-    grid-template-rows: repeat(9, 28mm);
+    grid-template-columns: repeat(4, 70mm);
+    grid-template-rows: repeat(6, 28mm);
     column-gap: 2mm;
     row-gap: 3mm;
     overflow: hidden;
@@ -669,7 +669,7 @@ input[type='checkbox'] {
 
   .price-label {
     position: relative;
-    width: 66mm;
+    width: 70mm;
     height: 28mm;
     overflow: hidden;
     break-inside: avoid;
@@ -682,30 +682,43 @@ input[type='checkbox'] {
     -webkit-print-color-adjust: exact;
   }
 
-  .label-logo {
+  .label-top-row {
     position: absolute;
-    top: 18px;
+    top: 2.5mm;
+    right: 2.5mm;
     left: 2.5mm;
+    display: flex;
+    height: 8mm;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2mm;
+  }
+
+  .label-logo {
     display: block;
-    width: 36mm;
+    flex: 0 1 34mm;
+    width: 34mm;
+    max-width: 52%;
     height: auto;
   }
 
-  .label-details {
+  .label-price {
+    flex: 0 0 auto;
+    color: #e2001a;
+    font-size: 8mm;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .label-name {
     position: absolute;
     right: 2.5mm;
     bottom: 2mm;
     left: 2.5mm;
-    display: grid;
-    height: 9mm;
-    grid-template-columns: minmax(0, 1fr) 25mm;
-    align-items: center;
-    gap: 1mm;
-  }
-
-  .label-name {
     display: block;
-    min-width: 0;
     overflow: hidden;
     font-weight: 800;
     line-height: 1;
@@ -723,15 +736,5 @@ input[type='checkbox'] {
 
   .name-long {
     font-size: 3mm;
-  }
-
-  .label-price {
-    color: #e2001a;
-    font-size: 8mm;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.04em;
-    text-align: right;
-    white-space: nowrap;
   }
 }

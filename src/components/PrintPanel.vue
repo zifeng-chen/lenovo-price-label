@@ -32,7 +32,7 @@ function printLabels() {
     <div class="print-actions-inner">
       <div class="selection-summary">
         <span class="selection-count">{{ products.length }}</span>
-        <span>已选择 {{ products.length }} 个商品（最多 27 个）</span>
+        <span>已选择 {{ products.length }} 个商品（最多 24 个）</span>
       </div>
       <div class="print-buttons">
         <button type="button" class="secondary-button" :disabled="!products.length" @click="emit('clear')">
@@ -48,11 +48,11 @@ function printLabels() {
   <div class="print-root" aria-hidden="true">
     <main class="print-sheet">
       <article v-for="product in products" :key="product.id" class="price-label">
-        <img class="label-logo" src="/lenovo-logo.svg" alt="" />
-        <div class="label-details">
-          <span class="label-name" :class="nameSizeClass(product.name)">{{ product.name }}</span>
+        <div class="label-top-row">
+          <img class="label-logo" src="/lenovo-logo.svg" alt="" />
           <span class="label-price">¥{{ formatPrice(product.price) }}</span>
         </div>
+        <span class="label-name" :class="nameSizeClass(product.name)">{{ product.name }}</span>
       </article>
     </main>
   </div>

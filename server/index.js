@@ -1,10 +1,12 @@
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
 import database from './database.js'
 import productsRouter from './routes/products.js'
 
+const HOST = '0.0.0.0'
 const PORT = 8890
 const app = express()
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url))
@@ -37,6 +39,27 @@ app.use((error, _request, response, _next) => {
   response.status(500).json({ message: '服务器处理请求时发生错误' })
 })
 
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`联想价格标签打印系统已启动：http://localhost:${PORT}`)
+function getLanAddresses() {
+  return Object.values(os.networkInterfaces())
+    .flat()
+    .filter((network) => (
+      network
+      && network.family === 'IPv4'
+      && !network.internal
+      && !network.address.startsWith('169.254.')
+    ))
+    .map((network) => network.address)
+}
+
+app.listen(PORT, HOST, () => {
+  console.log(`本机访问：http://localhost:${PORT}`)
+
+  const lanAddresses = getLanAddresses()
+  if (lanAddresses.length) {
+    lanAddresses.forEach((address) => {
+      console.log(`局域网访问：http://${address}:${PORT}`)
+    })
+  } else {
+    console.log(`服务已监听 ${HOST}:${PORT}，请使用本机局域网 IP 访问`)
+  }
 })
